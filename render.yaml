@@ -1,5 +1,5 @@
 services:
-  - type: web
+  - type: database
     name: db
     image: postgres
     env:
