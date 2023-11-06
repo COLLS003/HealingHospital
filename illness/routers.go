@@ -1,6 +1,5 @@
 package illness
 
-
 import (
 	"fmt"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 func Create(router *gin.RouterGroup) {
 	router.POST("/create", CreateIllness)
 	router.GET("/read/:id", ReadSingleIllness)
+	router.GET("/read/symptoms/:id", ReadSymptoms)
 	router.PUT("/update/:id", UpdateIllness)
 	router.DELETE("/delete/:id", DeleteIllness)
 	router.GET("/list", IllnesssList)
@@ -115,4 +115,41 @@ func IllnesssList(c *gin.Context) {
 	serializer := NewIllnesssSerializer(c, IllnesssModels)
 	response := serializer.Response()
 	c.JSON(http.StatusOK, gin.H{"Illnesss": response})
+}
+
+type SymptomsResponse struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func ReadSymptoms(c *gin.Context) {
+	IllnessID := c.Param("id")
+	IllnessIDUint, err := strconv.ParseUint(IllnessID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Illness ID"})
+		return
+	}
+
+	// Create an instance of IllnessModel with the provided ID
+	illness := &IllnessModel{ID: uint(IllnessIDUint)}
+
+	// Call the GetSymptoms function on the illness instance
+	symptoms, err := illness.GetSymptoms()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, database.NewError("Symptoms", err))
+		return
+	}
+
+	// Create a custom response structure
+	var response []SymptomsResponse
+	for _, symptom := range symptoms {
+		response = append(response, SymptomsResponse{
+			ID:          symptom.ID,
+			Name:        symptom.Name,
+			Description: symptom.Description,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"Symptoms": response})
 }

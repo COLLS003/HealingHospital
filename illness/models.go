@@ -1,10 +1,8 @@
 package illness
 
-// case class Illness(ID: Int, name: String, description: String)
-
-// case class Illness(ID: Int, name: String, description: String)
-
 import (
+	illnesssymptom "colls.labs.claire/illnessSymptom"
+	"colls.labs.claire/symptoms"
 	"gorm.io/gorm"
 	"healing.hospital/database"
 )
@@ -74,4 +72,31 @@ func GetIllnessByEmail(email string) (IllnessModel, error) {
 	var Illness IllnessModel
 	err := db.Where("Email = ?", email).First(&Illness).Error
 	return Illness, err
+}
+
+// get symptoms ot a given illness
+// GetSymptoms returns a list of symptoms for the illness with the given ID.
+
+func (illness *IllnessModel) GetSymptoms() ([]symptoms.SymptomsModel, error) {
+	db := database.GetConnection()
+
+	// Create a slice to store the symptom details
+	var symptoms1 []symptoms.SymptomsModel
+
+	// Find the illness-symptom associations for the given illness ID
+	var illnessSymptoms []illnesssymptom.IllnessSymptomsModel
+	if err := db.Where("illness_id = ?", illness.ID).Find(&illnessSymptoms).Error; err != nil {
+		return nil, err
+	}
+
+	// Iterate through the associations and fetch the symptom details
+	for _, is := range illnessSymptoms {
+		var symptom symptoms.SymptomsModel
+		if err := db.Where("ID = ?", is.SymptomsID).First(&symptom).Error; err != nil {
+			return nil, err
+		}
+		symptoms1 = append(symptoms1, symptom)
+	}
+
+	return symptoms1, nil
 }

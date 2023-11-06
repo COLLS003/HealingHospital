@@ -9,6 +9,7 @@ type IllnessModelValidator struct {
 	Illness struct {
 		Name        string `form:"name" json:"name" binding:"required,min=4"`
 		Description string `form:"description" json:"description" binding:"required"`
+		
 	} `json:"Illness"`
 	IllnessModel IllnessModel `json:"-"`
 }
