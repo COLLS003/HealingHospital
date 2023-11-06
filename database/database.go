@@ -1,5 +1,3 @@
-
-
 package database
 
 import (
@@ -9,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -19,20 +17,14 @@ var DB *gorm.DB
 func Init() *gorm.DB {
 
 	// Specify connection properties.
+	// Bulk@SMS2088
+	//http://bdigismat.com/index.php?route=/table/structure&db=bulksms&table=users
 	// dsn := "colls:1234@tcp(127.0.0.1:3306)/skin?charset=utf8mb4&parseTime=True&loc=Local"
-	// dsn := "host=127.0.0.1 user=colls password=1234 dbname=morninglight port=5432 sslmode=disable TimeZone=Asia/Kolkata"
-	// dsn := "host=database-1.crcqjkofrkxl.us-east-2.rds.amazonaws.com user=matrixUser password=fgh0Lob#%nKMCx@lL dbname=matrix port=5432 sslmode=disable TimeZone=Asia/Kolkata"
-
-	/*
-		DB_HOST='database-1.crcqjkofrkxl.us-east-2.rds.amazonaws.com'
-		dbname: matrix:user:matrixUser:pswd:fgh0Lob#%nKMCx@lL
-		DB_PORT='5432'
-		test
-	*/
+	dsn := "bulksms:Bulk@SMS2088@tcp(dbs.bdigismat.com:3306)/bulksms?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "colls:12345Ft(0!6@tcp(173.212.241.254:3306)/cradlevoices?charset=utf8mb4&parseTime=True&loc=Local"
 
 	// Open the database connection.
-	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db, err := gorm.Open(sqlite.Open("hospital.db"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,6 +32,8 @@ func Init() *gorm.DB {
 	DB = db
 	return DB
 }
+
+// Function to get the database connection
 
 // Function to get the database connection
 func GetConnection() *gorm.DB {
