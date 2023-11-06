@@ -1,0 +1,25 @@
+services:
+  - name: db
+    image: postgres
+    env:
+      - key: POSTGRES_USER
+        value: docker
+      - key: POSTGRES_PASSWORD
+        value: docker
+    volumes:
+      - name: db-data
+        path: /var/lib/postgresql/data
+    ports:
+      - 5432
+
+  - name: adminer
+    image: adminer
+    ports:
+      - 8080
+
+  - name: goapp
+    buildCommand: docker build -t my-go-app .
+    startCommand: docker run -p 3000:3000 my-go-app
+    env:
+      - key: PORT
+        value: 3000
