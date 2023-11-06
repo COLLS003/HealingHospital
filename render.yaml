@@ -17,7 +17,6 @@ services:
 
 databases:
   - name: my-postgres-db
-    type: postgresql
     user: docker
     password: docker
     port: 5432

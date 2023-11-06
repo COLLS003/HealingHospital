@@ -1,3 +1,5 @@
+
+
 package database
 
 import (
@@ -7,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"gorm.io/driver/postgres" // Use the PostgreSQL driver
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -15,13 +17,22 @@ var DB *gorm.DB
 
 // Open the database and establish the connection
 func Init() *gorm.DB {
-	// Specify the connection properties for the PostgreSQL container
-	dsn := "user=docker password=docker dbname=hospital sslmode=disable  host=localhost port=5432"
-	// The 'host' should match the service name defined in your Docker Compose file (in this case, 'db')
-	// 'user', 'password', 'dbname', and 'sslmode' should match your PostgreSQL configuration
+
+	// Specify connection properties.
+	// dsn := "colls:1234@tcp(127.0.0.1:3306)/skin?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "host=127.0.0.1 user=colls password=1234 dbname=morninglight port=5432 sslmode=disable TimeZone=Asia/Kolkata"
+	// dsn := "host=database-1.crcqjkofrkxl.us-east-2.rds.amazonaws.com user=matrixUser password=fgh0Lob#%nKMCx@lL dbname=matrix port=5432 sslmode=disable TimeZone=Asia/Kolkata"
+
+	/*
+		DB_HOST='database-1.crcqjkofrkxl.us-east-2.rds.amazonaws.com'
+		dbname: matrix:user:matrixUser:pswd:fgh0Lob#%nKMCx@lL
+		DB_PORT='5432'
+		test
+	*/
 
 	// Open the database connection.
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("hospital.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
