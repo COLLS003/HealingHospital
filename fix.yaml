@@ -7,13 +7,16 @@ services:
     env:
       - key: PORT
         value: 3000
+ 
 
-  # Adminer to manage the database
+ 
+  #amininer to manage the database 
   - type: web
     name: adminer
     image: adminer
     ports:
       - 8080
+  
 
 databases:
   - name: my-postgres-db
@@ -27,3 +30,6 @@ databases:
     volumes:
       - name: db-data
         path: /var/lib/postgresql/data
+
+
+
